@@ -1,0 +1,17 @@
+{
+  "name": "My Safe Backup",
+  "short_name": "Safe Backup",
+  "description": "Personal photo, video and file backup app",
+  "start_url": "index.html",
+  "display": "standalone",
+  "background_color": "#f1f5f9",
+  "theme_color": "#0f766e",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "icon.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

@@ -1,0 +1,1443 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <title>Backup Manager - My Safe Backup</title>
+
+
+  <style>
+
+    * {
+      box-sizing: border-box;
+    }
+
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f1f5f9;
+      color: #0f172a;
+    }
+
+
+    header {
+      background: #0f766e;
+      color: white;
+      text-align: center;
+      padding: 22px 15px;
+    }
+
+
+    header h1 {
+      margin: 0;
+      font-size: 26px;
+    }
+
+
+    header p {
+      margin: 7px 0 0;
+      font-size: 14px;
+    }
+
+
+    .container {
+      width: 100%;
+      max-width: 700px;
+      margin: auto;
+      padding: 18px;
+    }
+
+
+    .card {
+      background: white;
+      padding: 18px;
+      margin-bottom: 18px;
+      border-radius: 16px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    }
+
+
+    h2 {
+      margin-top: 0;
+      font-size: 20px;
+    }
+
+
+    .description {
+      color: #64748b;
+      line-height: 1.6;
+      font-size: 14px;
+    }
+
+
+    input[type="file"] {
+      width: 100%;
+      padding: 13px;
+      margin-top: 10px;
+      border: 1px solid #cbd5e1;
+      border-radius: 10px;
+      background: #f8fafc;
+    }
+
+
+    .summary {
+      background: #ecfdf5;
+      color: #065f46;
+      padding: 16px;
+      border-radius: 12px;
+      line-height: 1.8;
+      font-weight: bold;
+    }
+
+
+    .preview-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 9px;
+      margin-top: 15px;
+    }
+
+
+    .preview-item {
+      background: #f8fafc;
+      border-radius: 10px;
+      overflow: hidden;
+      border: 1px solid #e2e8f0;
+    }
+
+
+    .preview-item img,
+    .preview-item video {
+      width: 100%;
+      height: 105px;
+      object-fit: cover;
+      display: block;
+      background: #000;
+    }
+
+
+    .preview-name {
+      padding: 7px;
+      font-size: 11px;
+      word-break: break-word;
+    }
+
+
+    .file-list {
+      margin-top: 12px;
+    }
+
+
+    .file-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 11px;
+      padding: 11px;
+      margin-top: 8px;
+    }
+
+
+    .file-info {
+      min-width: 0;
+      flex: 1;
+    }
+
+
+    .file-name {
+      font-weight: bold;
+      font-size: 14px;
+      word-break: break-word;
+    }
+
+
+    .file-size {
+      color: #64748b;
+      font-size: 12px;
+      margin-top: 4px;
+    }
+
+
+    .remove-btn {
+      width: auto;
+      margin: 0;
+      padding: 8px 10px;
+      border: none;
+      border-radius: 8px;
+      background: #fee2e2;
+      color: #991b1b;
+      font-size: 13px;
+      cursor: pointer;
+    }
+
+
+    button {
+      width: 100%;
+      padding: 15px;
+      margin-top: 12px;
+      border: none;
+      border-radius: 11px;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+
+    button:disabled {
+      background: #94a3b8 !important;
+      color: white !important;
+      cursor: not-allowed;
+    }
+
+
+    .backup-btn {
+      background: #0f766e;
+      color: white;
+    }
+
+
+    .export-btn {
+      background: #2563eb;
+      color: white;
+    }
+
+
+    .clear-btn {
+      background: #fee2e2;
+      color: #991b1b;
+    }
+
+
+    .restore-btn {
+      background: #e2e8f0;
+      color: #0f172a;
+    }
+
+
+    .status {
+      display: none;
+      background: #ecfdf5;
+      color: #065f46;
+      padding: 14px;
+      border-radius: 11px;
+      margin-top: 14px;
+      line-height: 1.7;
+    }
+
+
+    .empty {
+      text-align: center;
+      color: #64748b;
+      padding: 15px;
+    }
+
+
+    .warning {
+      background: #fff7ed;
+      color: #9a3412;
+      padding: 15px;
+      border-radius: 11px;
+      line-height: 1.7;
+      font-size: 14px;
+    }
+
+
+    .back {
+      display: block;
+      text-align: center;
+      color: #0f766e;
+      text-decoration: none;
+      font-weight: bold;
+      padding: 15px;
+    }
+
+
+    @media (max-width: 450px) {
+
+      .preview-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+    }
+
+  </style>
+
+</head>
+
+
+<body>
+
+
+<header>
+
+  <h1>📦 Backup Manager</h1>
+
+  <p>
+    My Safe Backup
+  </p>
+
+</header>
+
+
+
+<div class="container">
+
+
+  <!-- PHOTO VIDEO -->
+
+  <div class="card">
+
+    <h2>
+      📸 Photos & Videos
+    </h2>
+
+    <div class="description">
+      তোমার ছবি ও ভিডিও নির্বাচন করো।
+    </div>
+
+    <input
+      type="file"
+      id="mediaInput"
+      accept="image/*,video/*"
+      multiple
+    >
+
+    <div
+      id="mediaPreview"
+      class="preview-grid">
+    </div>
+
+  </div>
+
+
+
+  <!-- DOCUMENT -->
+
+  <div class="card">
+
+    <h2>
+      📄 Documents & Files
+    </h2>
+
+    <div class="description">
+      PDF, Word, ZIP বা অন্য যেকোনো ফাইল
+      নির্বাচন করতে পারো।
+    </div>
+
+    <input
+      type="file"
+      id="documentInput"
+      multiple
+    >
+
+  </div>
+
+
+
+  <!-- SUMMARY -->
+
+  <div class="card">
+
+    <h2>
+      📊 Backup Summary
+    </h2>
+
+    <div
+      id="summary"
+      class="summary">
+
+      মোট ফাইল: 0
+      <br>
+
+      মোট সাইজ: 0 KB
+
+    </div>
+
+  </div>
+
+
+
+  <!-- FILE LIST -->
+
+  <div class="card">
+
+    <h2>
+      📋 Selected Files
+    </h2>
+
+    <div
+      id="fileList"
+      class="file-list">
+
+      <div class="empty">
+        এখনো কোনো ফাইল নির্বাচন করা হয়নি।
+      </div>
+
+    </div>
+
+  </div>
+
+
+
+  <!-- BACKUP -->
+
+  <div class="card">
+
+    <h2>
+      💾 Backup
+    </h2>
+
+    <button
+      id="backupBtn"
+      class="backup-btn"
+      disabled>
+
+      💾 Save Backup Information
+
+    </button>
+
+
+    <button
+      id="exportBtn"
+      class="export-btn"
+      disabled>
+
+      📥 Export Backup Information
+
+    </button>
+
+
+    <button
+      id="clearBtn"
+      class="clear-btn"
+      disabled>
+
+      🗑️ Clear Selected Files
+
+    </button>
+
+
+    <div
+      id="status"
+      class="status">
+    </div>
+
+  </div>
+
+
+
+  <!-- RESTORE -->
+
+  <div class="card">
+
+    <h2>
+      🔄 Backup Information
+    </h2>
+
+    <div
+      id="savedBackup">
+
+      এখনো কোনো Backup Information
+      সংরক্ষিত নেই।
+
+    </div>
+
+
+    <button
+      id="restoreInfoBtn"
+      class="restore-btn">
+
+      🔄 Show Saved Backup
+
+    </button>
+
+  </div>
+
+
+
+  <!-- IMPORTANT -->
+
+  <div class="card">
+
+    <div class="warning">
+
+      ⚠️ <strong>গুরুত্বপূর্ণ</strong>
+
+      <br><br>
+
+      এই HTML version-এ নির্বাচিত ফাইলের
+      তথ্য এবং Backup Information রাখা যায়।
+
+      <br><br>
+
+      কিন্তু ফোনের সব ছবি/ভিডিওকে
+      বছরের পর বছর অ্যাপের ভেতরে
+      স্থায়ীভাবে রাখার জন্য Android-এর
+      Native Storage System দরকার।
+
+      <br><br>
+
+      Cloud Backup যুক্ত হলে ভবিষ্যতে
+      ফোন হারালেও Cloud থেকে ফাইল
+      Restore করা যাবে।
+
+    </div>
+
+  </div>
+
+
+
+  <a
+    href="index.html"
+    class="back">
+
+    ← মূল পেজে ফিরে যাও
+
+  </a>
+
+
+</div>
+
+
+
+<script>
+
+
+/* =========================
+   VARIABLES
+========================= */
+
+
+let selectedFiles = [];
+
+let previewURLs = [];
+
+
+const mediaInput =
+  document.getElementById(
+    "mediaInput"
+  );
+
+
+const documentInput =
+  document.getElementById(
+    "documentInput"
+  );
+
+
+const mediaPreview =
+  document.getElementById(
+    "mediaPreview"
+  );
+
+
+const fileList =
+  document.getElementById(
+    "fileList"
+  );
+
+
+const summary =
+  document.getElementById(
+    "summary"
+  );
+
+
+const backupBtn =
+  document.getElementById(
+    "backupBtn"
+  );
+
+
+const exportBtn =
+  document.getElementById(
+    "exportBtn"
+  );
+
+
+const clearBtn =
+  document.getElementById(
+    "clearBtn"
+  );
+
+
+const status =
+  document.getElementById(
+    "status"
+  );
+
+
+const savedBackup =
+  document.getElementById(
+    "savedBackup"
+  );
+
+
+const restoreInfoBtn =
+  document.getElementById(
+    "restoreInfoBtn"
+  );
+
+
+
+/* =========================
+   FILE INPUT
+========================= */
+
+
+mediaInput.addEventListener(
+  "change",
+  function () {
+
+    addFiles(this.files);
+
+  }
+);
+
+
+documentInput.addEventListener(
+  "change",
+  function () {
+
+    addFiles(this.files);
+
+  }
+);
+
+
+
+/* =========================
+   ADD FILES
+========================= */
+
+
+function addFiles(files) {
+
+  for (
+    const file of files
+  ) {
+
+    const exists =
+      selectedFiles.some(
+        function(oldFile) {
+
+          return (
+            oldFile.name === file.name &&
+            oldFile.size === file.size &&
+            oldFile.lastModified ===
+            file.lastModified
+          );
+
+        }
+      );
+
+
+    if (!exists) {
+
+      selectedFiles.push(file);
+
+    }
+
+  }
+
+
+  updateScreen();
+
+}
+
+
+
+/* =========================
+   UPDATE SCREEN
+========================= */
+
+
+function updateScreen() {
+
+  clearPreviewURLs();
+
+  mediaPreview.innerHTML = "";
+
+  fileList.innerHTML = "";
+
+
+  if (
+    selectedFiles.length === 0
+  ) {
+
+    fileList.innerHTML =
+      '<div class="empty">' +
+      'এখনো কোনো ফাইল নির্বাচন করা হয়নি।' +
+      '</div>';
+
+    backupBtn.disabled = true;
+
+    exportBtn.disabled = true;
+
+    clearBtn.disabled = true;
+
+  } else {
+
+    backupBtn.disabled = false;
+
+    exportBtn.disabled = false;
+
+    clearBtn.disabled = false;
+
+
+    selectedFiles.forEach(
+      function(file, index) {
+
+        createFileItem(
+          file,
+          index
+        );
+
+
+        if (
+          file.type.startsWith(
+            "image/"
+          ) ||
+          file.type.startsWith(
+            "video/"
+          )
+        ) {
+
+          createPreview(
+            file
+          );
+
+        }
+
+      }
+    );
+
+  }
+
+
+  updateSummary();
+
+}
+
+
+
+/* =========================
+   FILE ITEM
+========================= */
+
+
+function createFileItem(
+  file,
+  index
+) {
+
+  const item =
+    document.createElement(
+      "div"
+    );
+
+
+  item.className =
+    "file-item";
+
+
+  const info =
+    document.createElement(
+      "div"
+    );
+
+
+  info.className =
+    "file-info";
+
+
+  const name =
+    document.createElement(
+      "div"
+    );
+
+
+  name.className =
+    "file-name";
+
+
+  name.textContent =
+    "📄 " + file.name;
+
+
+  const size =
+    document.createElement(
+      "div"
+    );
+
+
+  size.className =
+    "file-size";
+
+
+  size.textContent =
+    formatSize(
+      file.size
+    );
+
+
+  info.appendChild(name);
+
+  info.appendChild(size);
+
+
+  const remove =
+    document.createElement(
+      "button"
+    );
+
+
+  remove.className =
+    "remove-btn";
+
+
+  remove.textContent =
+    "✕ Remove";
+
+
+  remove.onclick =
+    function() {
+
+      removeFile(index);
+
+    };
+
+
+  item.appendChild(info);
+
+  item.appendChild(remove);
+
+
+  fileList.appendChild(item);
+
+}
+
+
+
+/* =========================
+   PREVIEW
+========================= */
+
+
+function createPreview(file) {
+
+  const box =
+    document.createElement(
+      "div"
+    );
+
+
+  box.className =
+    "preview-item";
+
+
+  const url =
+    URL.createObjectURL(
+      file
+    );
+
+
+  previewURLs.push(url);
+
+
+  if (
+    file.type.startsWith(
+      "image/"
+    )
+  ) {
+
+    const img =
+      document.createElement(
+        "img"
+      );
+
+
+    img.src = url;
+
+    img.alt = file.name;
+
+
+    box.appendChild(img);
+
+  } else {
+
+    const video =
+      document.createElement(
+        "video"
+      );
+
+
+    video.src = url;
+
+    video.controls = true;
+
+
+    box.appendChild(video);
+
+  }
+
+
+  const name =
+    document.createElement(
+      "div"
+    );
+
+
+  name.className =
+    "preview-name";
+
+
+  name.textContent =
+    file.name;
+
+
+  box.appendChild(name);
+
+
+  mediaPreview.appendChild(box);
+
+}
+
+
+
+/* =========================
+   REMOVE FILE
+========================= */
+
+
+function removeFile(index) {
+
+  selectedFiles.splice(
+    index,
+    1
+  );
+
+
+  updateScreen();
+
+}
+
+
+
+/* =========================
+   SUMMARY
+========================= */
+
+
+function updateSummary() {
+
+  let totalSize = 0;
+
+
+  selectedFiles.forEach(
+    function(file) {
+
+      totalSize += file.size;
+
+    }
+  );
+
+
+  summary.innerHTML =
+    "মোট ফাইল: " +
+    selectedFiles.length +
+    "<br>" +
+    "মোট সাইজ: " +
+    formatSize(totalSize);
+
+}
+
+
+
+/* =========================
+   FORMAT SIZE
+========================= */
+
+
+function formatSize(bytes) {
+
+  if (
+    bytes < 1024
+  ) {
+
+    return (
+      bytes +
+      " Bytes"
+    );
+
+  }
+
+
+  if (
+    bytes < 1024 * 1024
+  ) {
+
+    return (
+      (bytes / 1024)
+      .toFixed(1) +
+      " KB"
+    );
+
+  }
+
+
+  if (
+    bytes <
+    1024 * 1024 * 1024
+  ) {
+
+    return (
+      (bytes /
+      (1024 * 1024))
+      .toFixed(2) +
+      " MB"
+    );
+
+  }
+
+
+  return (
+    (bytes /
+    (1024 * 1024 * 1024))
+    .toFixed(2) +
+    " GB"
+  );
+
+}
+
+
+
+/* =========================
+   BACKUP INFORMATION
+========================= */
+
+
+function createBackupInformation() {
+
+  let totalSize = 0;
+
+
+  selectedFiles.forEach(
+    function(file) {
+
+      totalSize += file.size;
+
+    }
+  );
+
+
+  return {
+
+    appName:
+      "My Safe Backup",
+
+    backupDate:
+      new Date().toLocaleString(),
+
+    totalFiles:
+      selectedFiles.length,
+
+    totalSize:
+      totalSize,
+
+    totalSizeText:
+      formatSize(totalSize),
+
+    files:
+      selectedFiles.map(
+        function(file) {
+
+          return {
+
+            name:
+              file.name,
+
+            type:
+              file.type,
+
+            size:
+              file.size,
+
+            sizeText:
+              formatSize(
+                file.size
+              ),
+
+            lastModified:
+              file.lastModified
+
+          };
+
+        }
+      )
+
+  };
+
+}
+
+
+
+/* =========================
+   SAVE BACKUP INFO
+========================= */
+
+
+backupBtn.addEventListener(
+  "click",
+  function() {
+
+    if (
+      selectedFiles.length === 0
+    ) {
+
+      alert(
+        "আগে কিছু ফাইল নির্বাচন করো।"
+      );
+
+      return;
+
+    }
+
+
+    const data =
+      createBackupInformation();
+
+
+    localStorage.setItem(
+      "mySafeBackupInfo",
+      JSON.stringify(data)
+    );
+
+
+    status.style.display =
+      "block";
+
+
+    status.innerHTML =
+      "✅ Backup Information সংরক্ষণ হয়েছে।" +
+      "<br><br>" +
+      "মোট ফাইল: " +
+      data.totalFiles +
+      "<br>" +
+      "মোট সাইজ: " +
+      data.totalSizeText;
+
+
+  }
+);
+
+
+
+/* =========================
+   EXPORT
+========================= */
+
+
+exportBtn.addEventListener(
+  "click",
+  function() {
+
+    if (
+      selectedFiles.length === 0
+    ) {
+
+      alert(
+        "আগে কিছু ফাইল নির্বাচন করো।"
+      );
+
+      return;
+
+    }
+
+
+    const data =
+      createBackupInformation();
+
+
+    const json =
+      JSON.stringify(
+        data,
+        null,
+        2
+      );
+
+
+    const blob =
+      new Blob(
+        [json],
+        {
+          type:
+            "application/json"
+        }
+      );
+
+
+    const url =
+      URL.createObjectURL(
+        blob
+      );
+
+
+    const link =
+      document.createElement(
+        "a"
+      );
+
+
+    link.href = url;
+
+
+    link.download =
+      "My-Safe-Backup-Info.json";
+
+
+    document.body.appendChild(
+      link
+    );
+
+
+    link.click();
+
+
+    document.body.removeChild(
+      link
+    );
+
+
+    URL.revokeObjectURL(
+      url
+    );
+
+
+    status.style.display =
+      "block";
+
+
+    status.innerHTML =
+      "📥 Backup Information ফাইল তৈরি হয়েছে।";
+
+  }
+);
+
+
+
+/* =========================
+   CLEAR
+========================= */
+
+
+clearBtn.addEventListener(
+  "click",
+  function() {
+
+    if (
+      selectedFiles.length === 0
+    ) {
+
+      return;
+
+    }
+
+
+    const confirmClear =
+      confirm(
+        "নির্বাচিত সব ফাইলের তালিকা মুছে ফেলবে?"
+      );
+
+
+    if (
+      !confirmClear
+    ) {
+
+      return;
+
+    }
+
+
+    selectedFiles = [];
+
+
+    mediaInput.value = "";
+
+    documentInput.value = "";
+
+
+    status.style.display =
+      "none";
+
+
+    updateScreen();
+
+  }
+);
+
+
+
+/* =========================
+   SHOW SAVED BACKUP
+========================= */
+
+
+restoreInfoBtn.addEventListener(
+  "click",
+  function() {
+
+    const saved =
+      localStorage.getItem(
+        "mySafeBackupInfo"
+      );
+
+
+    if (!saved) {
+
+      savedBackup.innerHTML =
+        "❌ কোনো Backup Information পাওয়া যায়নি।";
+
+      return;
+
+    }
+
+
+    try {
+
+      const data =
+        JSON.parse(
+          saved
+        );
+
+
+      let html =
+        "<strong>🛡️ My Safe Backup</strong>" +
+        "<br><br>" +
+
+        "Backup Date: " +
+        data.backupDate +
+        "<br>" +
+
+        "মোট ফাইল: " +
+        data.totalFiles +
+        "<br>" +
+
+        "মোট সাইজ: " +
+        data.totalSizeText +
+        "<br><br>" +
+
+        "<strong>📋 Files:</strong><br>";
+
+
+      data.files.forEach(
+        function(file) {
+
+          html +=
+            "📄 " +
+            escapeHTML(
+              file.name
+            ) +
+            " — " +
+            file.sizeText +
+            "<br>";
+
+        }
+      );
+
+
+      savedBackup.innerHTML =
+        html;
+
+
+    } catch(error) {
+
+      savedBackup.innerHTML =
+        "❌ Backup Information পড়তে সমস্যা হয়েছে।";
+
+    }
+
+  }
+);
+
+
+
+/* =========================
+   HTML SECURITY
+========================= */
+
+
+function escapeHTML(text) {
+
+  return String(text)
+    .replace(
+      /&/g,
+      "&amp;"
+    )
+    .replace(
+      /</g,
+      "&lt;"
+    )
+    .replace(
+      />/g,
+      "&gt;"
+    )
+    .replace(
+      /"/g,
+      "&quot;"
+    )
+    .replace(
+      /'/g,
+      "&#039;"
+    );
+
+}
+
+
+
+/* =========================
+   CLEAR PREVIEW URLS
+========================= */
+
+
+function clearPreviewURLs() {
+
+  previewURLs.forEach(
+    function(url) {
+
+      URL.revokeObjectURL(
+        url
+      );
+
+    }
+  );
+
+
+  previewURLs = [];
+
+}
+
+
+
+/* =========================
+   START
+========================= */
+
+
+updateScreen();
+
+</script>
+
+
+</body>
+</html>
